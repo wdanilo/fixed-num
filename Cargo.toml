@@ -1,5 +1,5 @@
 [workspace]
-package.version = "1.0.0"
+package.version = "0.1.0"
 package.authors = ["Wojciech Danilo <wojciech.danilo@gmail.com>"]
 package.edition = "2024"
 members = ["crates/*", "tests/*"]
