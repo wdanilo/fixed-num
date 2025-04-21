@@ -1,0 +1,12 @@
+[package]
+name = "fixed-num-helper"
+version = { workspace = true }
+authors = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+
+[dependencies]
+
+[lints]
+workspace = true

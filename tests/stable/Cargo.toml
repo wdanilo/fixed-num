@@ -1,0 +1,10 @@
+[package]
+name = "fiexed-num-test-stable"
+version = { workspace = true }
+edition = {workspace = true }
+
+[dependencies]
+fixed-num = { path = "../../crates/lib" }
+
+[lints]
+workspace = true

@@ -1,0 +1,15 @@
+[package]
+name = "fixed-num-macro"
+version = { workspace = true }
+authors = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+quote            = { workspace = true }
+fixed-num-helper = { workspace = true }
+
+[lib]
+proc-macro = true
+
+[lints]
+workspace = true

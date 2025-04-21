@@ -1,0 +1,14 @@
+[package]
+name = "fixed-num-validator"
+version = { workspace = true }
+authors = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+
+[dependencies]
+fixed-num-helper = { workspace = true }
+bigdecimal       = {workspace = true}
+
+[lints]
+workspace = true

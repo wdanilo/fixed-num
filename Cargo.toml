@@ -1,0 +1,111 @@
+[workspace]
+package.version = "1.0.0"
+package.authors = ["Wojciech Danilo <wojciech.danilo@gmail.com>"]
+package.edition = "2024"
+members = ["crates/*", "tests/*"]
+resolver = "3"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+overflow-checks = false
+strip = true
+
+[profile.bench]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+overflow-checks = false
+strip = true
+
+[workspace.dependencies]
+fixed-num        = { path = "crates/lib" }
+fixed-num-helper = { path = "crates/helper" }
+fixed-num-macro  = { path = "crates/macro" }
+validator        = { package = "fixed-num-validator", path = "crates/validator" }
+arrow-buffer     = { version = "55" }
+ethnum           = { version = "1.5.1" }
+paste            = { default-features = false, version = "1", features = [] }
+rand             = { default-features = false, version = "0.9", features = ["std_rng"] }
+
+# Benchmarks
+rust_decimal     = { version = "1.37.1", features = ["maths"] }
+bigdecimal       = "0.4.8"
+decimal          = { package = "decimal", version = "2.1.0", features = ["serde"] }
+fixed            = { version = "1.29.0", features = ["serde", "std"] }
+decimal-rs       = "0.1.43"
+fastnum          = "0.2.3"
+
+# Macros
+quote = { version = "1" }
+
+# Tests and benchmarks
+serde_json = { version = "1", features = ["arbitrary_precision"] }
+criterion  = { version = "0.5", features = ["real_blackbox"] }
+
+
+[workspace.lints.clippy]
+
+assigning_clones = "warn"
+checked_conversions = "warn"
+cloned_instead_of_copied = "warn"
+cognitive_complexity = "warn"
+dbg_macro = "warn"
+doc_markdown = "warn"
+explicit_iter_loop = "warn"
+filter_map_next = "warn"
+if_then_some_else_none = "warn"
+index_refutable_slice = "warn"
+large_futures = "warn"
+large_stack_frames = "warn"
+large_types_passed_by_value = "warn"
+manual_let_else = "warn"
+map_unwrap_or = "warn"
+needless_pass_by_ref_mut = "warn"
+nonstandard_macro_braces = "warn"
+option_option = "warn"
+panic = "warn"
+pub_underscore_fields = "warn"
+rc_buffer = "warn"
+rc_mutex = "warn"
+renamed_function_params = "warn"
+semicolon_outside_block = "warn"
+trivially_copy_pass_by_ref = "warn"
+tuple_array_conversions = "warn"
+unchecked_duration_subtraction = "warn"
+uninlined_format_args = "warn"
+unnecessary_box_returns = "warn"
+unnecessary_safety_doc = "warn"
+unnecessary_wraps = "warn"
+unnested_or_patterns = "warn"
+unreadable_literal = "warn"
+unused_self = "warn"
+use_self = "warn"
+unwrap_used = "warn"
+type_complexity = "allow"
+
+[workspace.lints.rust]
+ambiguous_negative_literals = "deny"
+closure_returning_async_block = "warn"
+elided_lifetimes_in_paths = "warn"
+explicit_outlives_requirements = "warn"
+let_underscore_drop = "warn"
+missing_copy_implementations = "warn"
+missing_debug_implementations = "warn"
+non_ascii_idents = "warn"
+redundant_imports = "warn"
+redundant_lifetimes = "warn"
+single_use_lifetimes = "warn"
+trivial_numeric_casts = "warn"
+unit_bindings = "warn"
+unnameable_types = "warn"
+unreachable_pub = "warn"
+unused_crate_dependencies = "warn"
+unused_extern_crates = "warn"
+unused_import_braces = "warn"
+unused_lifetimes = "deny"
+unused_macro_rules = "warn"
+unused_qualifications = "warn"
+variant_size_differences = "warn"

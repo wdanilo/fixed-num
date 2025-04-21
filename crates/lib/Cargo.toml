@@ -1,0 +1,27 @@
+[package]
+name = "fixed-num"
+version = { workspace = true }
+authors = { workspace = true }
+edition = { workspace = true }
+
+[lib]
+
+[dependencies]
+paste            = { workspace = true }
+fixed-num-helper = { workspace = true }
+fixed-num-macro  = { workspace = true }
+rand             = { workspace = true }
+arrow-buffer     = { workspace = true, optional = true }
+ethnum           = { workspace = true, optional = true }
+
+[dev-dependencies]
+validator = { workspace = true }
+
+[lints]
+workspace = true
+
+[features]
+default = ["mul_opt", "i256_ethnum"]
+i256_ethnum = ["ethnum"]
+i256_arrow = ["arrow-buffer"]
+mul_opt = []

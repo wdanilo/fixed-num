@@ -1,0 +1,25 @@
+[package]
+name = "fixed-num-bench"
+version = { workspace = true }
+authors = { workspace = true }
+edition = { workspace = true }
+
+[dependencies]
+paste        = { workspace = true }
+fixed-num    = { workspace = true }
+criterion    = { workspace = true }
+serde_json   = { workspace = true }
+validator    = { workspace = true }
+rust_decimal = { workspace = true }
+bigdecimal   = { workspace = true }
+decimal      = { workspace = true }
+fixed        = { workspace = true }
+decimal-rs   = { workspace = true }
+fastnum      = { workspace = true }
+
+[lints]
+workspace = true
+
+[[bench]]
+name = "ops"
+harness = false
