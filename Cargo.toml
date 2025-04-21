@@ -2,6 +2,7 @@
 package.version = "0.1.0"
 package.authors = ["Wojciech Danilo <wojciech.danilo@gmail.com>"]
 package.edition = "2024"
+package.license = "MIT OR Apache-2.0"
 members = ["crates/*", "tests/*"]
 resolver = "3"
 

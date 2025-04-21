@@ -3,6 +3,9 @@ name = "fixed-num-helper"
 version = { workspace = true }
 authors = { workspace = true }
 edition = { workspace = true }
+license = { workspace = true }
+description = "A helper crate for the 'fixed-num' crate."
+keywords = []
 
 [lib]
 
