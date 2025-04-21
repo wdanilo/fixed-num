@@ -22,10 +22,11 @@ overflow-checks = false
 strip = true
 
 [workspace.dependencies]
-fixed-num        = { path = "crates/lib" }
-fixed-num-helper = { path = "crates/helper" }
-fixed-num-macro  = { path = "crates/macro" }
-validator        = { package = "fixed-num-validator", path = "crates/validator" }
+fixed-num        = { version = "0.1.0", path = "crates/lib" }
+fixed-num-helper = { version = "0.1.0", path = "crates/helper" }
+fixed-num-macro  = { version = "0.1.0", path = "crates/macro" }
+validator        = { version = "0.1.0", package = "fixed-num-validator", path = "crates/validator" }
+
 arrow-buffer     = { version = "55" }
 ethnum           = { version = "1.5.1" }
 paste            = { default-features = false, version = "1", features = [] }

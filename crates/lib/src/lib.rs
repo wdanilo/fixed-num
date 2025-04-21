@@ -12,7 +12,7 @@
 //!     border-right: 4px solid var(--border-color)
 //!   }
 //! </style>
-#![doc = include_str!("../../../README.md")]
+#![doc = include_str!("../README.md")]
 #![cfg_attr(nightly, feature(const_trait_impl))]
 #![cfg_attr(nightly, feature(step_trait))]
 

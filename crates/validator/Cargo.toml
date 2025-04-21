@@ -11,7 +11,7 @@ keywords = []
 
 [dependencies]
 fixed-num-helper = { workspace = true }
-bigdecimal       = {workspace = true}
+bigdecimal       = { workspace = true }
 
 [lints]
 workspace = true
