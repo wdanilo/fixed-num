@@ -4,6 +4,7 @@ version = { workspace = true }
 authors = { workspace = true }
 edition = { workspace = true }
 license = { workspace = true }
+repository = { workspace = true }
 description = "A high-precision, high-performance fixed-point decimal type."
 keywords = ["decimal", "financial", "fixed", "number", "precision"]
 

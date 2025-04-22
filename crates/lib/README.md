@@ -187,15 +187,19 @@ are marked with the ✅ symbol.
 | `±0`, `±Infinity`, `NaN`                     | ❌                                     | ❌                       | ❌            | ✅                                                           | ❌                        | ❌                                              | ✅                                    |
 
 
-### Max Precision
-- [rust_decimal]: `Decimal` represents a 128 bit representation of a fixed-precision decimal number. 
-  The finite set of values of type Decimal are of the form `m / 10^e`, where `m` is an integer such 
-  that `-2^96 < m < 2^96`, and `e` is an integer between `0` and `28` inclusive. So, `m` is in range
+<details>
+  <summary>Notes</summary>
+
+- [rust_decimal](https://github.com/paupino/rust-decimal): `Decimal` represents a 128 bit 
+  representation of a fixed-precision decimal number. The finite set of values of type Decimal are 
+  of the form `m / 10^e`, where `m` is an integer such that `-2^96 < m < 2^96`, and `e` is an 
+  integer between `0` and `28` inclusive. So, `m` is in range
   `-79_228_162_514_264_337_593_543_950_336` to `79_228_162_514_264_337_593_543_950_336`, which gives
   28 full digits and the dot can be placed anywhere in the number.
-- [decimal](https://github.com/alkis/decimal?tab=readme-ov-file): The library provides d128 which is 
-  a [128-bit decimal floating point number](https://en.wikipedia.org/wiki/Decimal128_floating-point_format). 
-  
+- [decimal](https://github.com/alkis/decimal?tab=readme-ov-file): The library provides d128 which is
+  a [128-bit decimal floating point number](https://en.wikipedia.org/wiki/Decimal128_floating-point_format).
+
+</details>
 
 <br/>
 
