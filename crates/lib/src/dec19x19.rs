@@ -1934,6 +1934,27 @@ impl FromStr for Dec19x19 {
     }
 }
 
+impl<'t> TryFrom<&'t str> for Dec19x19 {
+    type Error = ParseDec19x19Error;
+    fn try_from(s: &'t str) -> Result<Self, Self::Error> {
+        Self::from_str(s)
+    }
+}
+
+impl<'t> TryFrom<&'t String> for Dec19x19 {
+    type Error = ParseDec19x19Error;
+    fn try_from(s: &'t String) -> Result<Self, Self::Error> {
+        Self::from_str(s)
+    }
+}
+
+impl TryFrom<String> for Dec19x19 {
+    type Error = ParseDec19x19Error;
+    fn try_from(s: String) -> Result<Self, Self::Error> {
+        Self::from_str(&s)
+    }
+}
+
 impl std::fmt::Display for Dec19x19 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let separator = f.alternate().then_some('_');

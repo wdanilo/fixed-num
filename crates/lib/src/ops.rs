@@ -10,6 +10,55 @@ pub use std::ops::DivAssign;
 pub use std::ops::Neg;
 
 // ==============
+// === Traits ===
+// ==============
+
+pub mod traits {
+    pub use std::ops::Add as _;
+    pub use std::ops::Sub as _;
+    pub use std::ops::Mul as _;
+    pub use std::ops::Div as _;
+    pub use std::ops::Rem as _;
+    pub use std::ops::AddAssign as _;
+    pub use std::ops::SubAssign as _;
+    pub use std::ops::MulAssign as _;
+    pub use std::ops::DivAssign as _;
+    pub use std::ops::Neg as _;
+    pub use super::HasMax as _;
+    pub use super::HasMin as _;
+    pub use super::Signum as _;
+    pub use super::Abs as _;
+    pub use super::UncheckedAdd as _;
+    pub use super::CheckedAdd as _;
+    pub use super::SaturatingAdd as _;
+    pub use super::UncheckedSub as _;
+    pub use super::CheckedSub as _;
+    pub use super::SaturatingSub as _;
+    pub use super::UncheckedMul as _;
+    pub use super::CheckedMul as _;
+    pub use super::SaturatingMul as _;
+    pub use super::UncheckedDiv as _;
+    pub use super::CheckedDiv as _;
+    pub use super::SaturatingDiv as _;
+    pub use super::Trunc as _;
+    pub use super::TruncTo as _;
+    pub use super::Floor as _;
+    pub use super::FloorTo as _;
+    pub use super::Ceil as _;
+    pub use super::CeilTo as _;
+    pub use super::Round as _;
+    pub use super::RoundTo as _;
+    pub use super::UncheckedSqrt as _;
+    pub use super::CheckedSqrt as _;
+    pub use super::UncheckedPow as _;
+    pub use super::CheckedPow as _;
+    pub use super::UncheckedLog10Floor as _;
+    pub use super::CheckedLog10Floor as _;
+    pub use super::UncheckedLn as _;
+    pub use super::CheckedLn as _;
+}
+
+// ==============
 // === HasMax ===
 // ==============
 

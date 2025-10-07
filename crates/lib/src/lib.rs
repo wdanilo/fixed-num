@@ -23,6 +23,7 @@ extern crate self as fixed_num;
 pub mod ops;
 pub mod dec19x19;
 pub mod i128_ops;
+mod serde;
 
 pub use dec19x19::Dec19x19;
 
@@ -31,8 +32,8 @@ pub use dec19x19::Dec19x19;
 // ==============
 
 pub mod traits {
-    pub use crate::ops::*;
-    pub use fixed_num_helper::Rand;
+    pub use crate::ops::traits::*;
+    pub use fixed_num_helper::Rand as _;
 }
 pub use traits::*;
 
