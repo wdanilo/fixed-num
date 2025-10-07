@@ -32,6 +32,7 @@ arrow-buffer     = { version = "55" }
 ethnum           = { version = "1.5.1" }
 paste            = { default-features = false, version = "1", features = [] }
 rand             = { default-features = false, version = "0.9", features = ["std_rng"] }
+serde            = { version = "1" }
 
 # Benchmarks
 rust_decimal     = { version = "1.37.1", features = ["maths"] }

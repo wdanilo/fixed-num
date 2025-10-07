@@ -4,7 +4,7 @@ version = { workspace = true }
 edition = {workspace = true }
 
 [dependencies]
-fixed-num = { path = "../../crates/lib" }
+fixed-num = { path = "../../crates/lib", features = ["serde", "serde_float"] }
 
 [lints]
 workspace = true

@@ -17,6 +17,7 @@ fixed-num-macro  = { workspace = true }
 rand             = { workspace = true }
 arrow-buffer     = { workspace = true, optional = true }
 ethnum           = { workspace = true, optional = true }
+serde            = { workspace = true, optional = true }
 
 [dev-dependencies]
 validator = { workspace = true }
@@ -26,6 +27,22 @@ workspace = true
 
 [features]
 default = ["mul_opt", "i256_ethnum"]
+
+# Uses i256 implementation from the ethnum crate. This is, in general, slightly faster than the
+# arrow one.
 i256_ethnum = ["ethnum"]
+
+# Uses i256 implementation from the arrow crate. This is, in general, slightly slower than the
+# ethnum one.
 i256_arrow = ["arrow-buffer"]
+
+# Uses a multiplication implementation optimized for numbers without fractional or integer part.
+# In most cases, this gives faster results than without this feature.
 mul_opt = []
+
+# Enables serialization and deserialization via the serde crate.
+serde = ["dep:serde"]
+
+# Enables deserialization from float types. We recommend not using this feature and instead using
+# arbitrary-precision deserialization if available.
+serde_float = ["serde"]

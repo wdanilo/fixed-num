@@ -23,6 +23,7 @@ extern crate self as fixed_num;
 pub mod ops;
 pub mod dec19x19;
 pub mod i128_ops;
+mod serde;
 
 pub use dec19x19::Dec19x19;
 
