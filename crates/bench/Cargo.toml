@@ -3,6 +3,7 @@ name = "fixed-num-bench"
 version = { workspace = true }
 authors = { workspace = true }
 edition = { workspace = true }
+publish = false
 
 [dependencies]
 paste        = { workspace = true }

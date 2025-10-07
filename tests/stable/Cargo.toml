@@ -2,6 +2,7 @@
 name = "fiexed-num-test-stable"
 version = { workspace = true }
 edition = {workspace = true }
+publish = false
 
 [dependencies]
 fixed-num = { path = "../../crates/lib", features = ["serde", "serde_float"] }
