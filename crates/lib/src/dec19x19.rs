@@ -1934,6 +1934,13 @@ impl FromStr for Dec19x19 {
     }
 }
 
+impl Dec19x19 {
+    pub fn from_str2(s: &str) -> Result<Self, ParseDec19x19Error> {
+        let repr = parse_dec19x19_internal2(s)?;
+        Ok(Self { repr })
+    }
+}
+
 impl<'t> TryFrom<&'t str> for Dec19x19 {
     type Error = ParseDec19x19Error;
     fn try_from(s: &'t str) -> Result<Self, Self::Error> {

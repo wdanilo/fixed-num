@@ -18,6 +18,7 @@ pub const FRAC_SCALE_I128: i128 = FRAC_SCALE_U128 as i128;
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum ParseDec19x19Error {
+    Empty,
     ParseIntError(std::num::ParseIntError),
     OutOfBounds,
     TooPrecise,
@@ -34,6 +35,7 @@ impl Error for ParseDec19x19Error {}
 impl Display for ParseDec19x19Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Self::Empty => write!(f, "Empty input"),
             Self::ParseIntError(err) => Display::fmt(err, f),
             Self::OutOfBounds => write!(f, "Value out of bounds"),
             Self::TooPrecise => write!(f, "Value too precise"),
@@ -163,6 +165,165 @@ pub fn parse_dec19x19_internal(s: &str) -> Result<i128, ParseDec19x19Error> {
         scaled.checked_add(frac_part)
     }.ok_or(ParseDec19x19Error::OutOfBounds)?;
     Ok(repr)
+}
+
+const SCALE: i128 = 10_000_000_000_000_000_000; // 10^19
+
+pub fn parse_dec19x19_internal2(s: &str) -> Result<i128, ParseDec19x19Error> {
+    let bytes = s.as_bytes();
+    let len = bytes.len();
+    if len == 0 {
+        return Err(ParseDec19x19Error::Empty);
+    }
+
+    let mut i = 0;
+
+    // Sign
+    let mut neg = false;
+    match bytes[i] {
+        b'+' => i += 1,
+        b'-' => {
+            neg = true;
+            i += 1;
+        }
+        _ => {}
+    }
+
+    let mut digits: i128 = 0;
+    let mut tail_zero_count: i32 = 0;
+    let mut digit_count: u32 = 0;
+    let mut frac_digit_count: i32 = 0;
+    let mut seen_digit = false;
+    let mut seen_dot = false;
+    let mut seen_e = false;
+
+    // Main number
+    while i < len {
+        let b = bytes[i];
+        match b {
+            b'0' => {
+                seen_digit = true;
+                tail_zero_count += 1;
+                let d = (b - b'0') as i128;
+                digit_count += 1;
+            }
+            b'1'..=b'9' => {
+                seen_digit = true;
+                let d = (b - b'0') as i128;
+                for _ in 0 ..= tail_zero_count {
+                    digits *= 10;
+                }
+                digits += d;
+                digit_count += 1;
+                if seen_dot {
+                    frac_digit_count += 1 + tail_zero_count;
+                }
+                tail_zero_count = 0;
+            }
+            b'_' => {}
+            b'.' if !seen_dot => {
+                seen_dot = true;
+            }
+            b'e' | b'E' => {
+                seen_e = true;
+                break
+            },
+            _ => return Err(ParseDec19x19Error::InvalidChar { char: char::from(b), pos: i }),
+        }
+        i += 1;
+    }
+
+    if seen_dot {
+        tail_zero_count = 0
+    }
+
+    // if !seen_digit {
+    //     return Err(ParseDecError::Invalid);
+    // }
+
+    // Exponent
+    let mut exp: i32 = 0;
+    if seen_e && i < len {
+        i += 1; // skip e/E
+        if i == len {
+            return Err(ParseDec19x19Error::OutOfBounds);
+        }
+
+        let mut exp_neg = false;
+        match bytes[i] {
+            b'+' => i += 1,
+            b'-' => {
+                exp_neg = true;
+                i += 1;
+            }
+            _ => {}
+        }
+
+        let mut seen_exp_digit = false;
+        while i < len {
+            let b = bytes[i];
+            match b {
+                b'0'..=b'9' => {
+                    seen_exp_digit = true;
+                    exp *= 10;
+                    exp += (b - b'0') as i32;
+                }
+                b'_' => {}
+                _ => return Err(ParseDec19x19Error::OutOfBounds),
+            }
+            i += 1;
+        }
+
+        if !seen_exp_digit {
+            return Err(ParseDec19x19Error::OutOfBounds);
+        }
+
+        if exp_neg {
+            exp = -exp;
+        }
+    }
+
+    // Apply exponent
+    dbg!(exp);
+    dbg!(digits);
+    dbg!(tail_zero_count);
+
+    let exp2 = exp + 19 - frac_digit_count + tail_zero_count;
+    dbg!(exp2);
+    // let int_scaled = int.checked_mul(10_i128.pow((19 + exp) as u32)).ok_or(ParseDec19x19Error::OutOfBounds)?;
+    // let frac_scaled = frac.checked_mul(10_i128.pow((19 - frac_digit_count as i32 + exp) as u32)).ok_or(ParseDec19x19Error::OutOfBounds)?;
+    // dbg!(int_scaled, frac_scaled);
+    if exp2 < 0 {
+        return Err(ParseDec19x19Error::TooPrecise);
+    }
+    let mut value = digits.checked_mul(10_i128.pow(exp2 as u32)).ok_or(ParseDec19x19Error::OutOfBounds)?;
+    // let mut value = int
+    //     .checked_mul(SCALE)
+    //     .and_then(|v| v.checked_add(frac))
+    //     .ok_or(ParseDec19x19Error::OutOfBounds)?;
+
+    dbg!(value);
+    // if scale_exp > 0 {
+    //     let mut k = scale_exp;
+    //     while k > 0 {
+    //         value = value
+    //             .checked_mul(10)
+    //             .ok_or(ParseDec19x19Error::OutOfBounds)?;
+    //         k -= 1;
+    //     }
+    // } else if scale_exp < 0 {
+    //     let mut k = -scale_exp;
+    //     while k > 0 {
+    //         value /= 10;
+    //         k -= 1;
+    //     }
+    // }
+
+    if neg {
+        value = value.checked_neg().ok_or(ParseDec19x19Error::OutOfBounds)?;
+    }
+
+    Ok(value)
 }
 
 // ====================
