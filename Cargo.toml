@@ -23,35 +23,33 @@ overflow-checks = false
 strip = true
 
 [workspace.dependencies]
-fixed-num        = { version = "0.2.0", path = "crates/lib" }
+fixed-num = { version = "0.2.0", path = "crates/lib" }
 fixed-num-helper = { version = "0.2.0", path = "crates/helper" }
-fixed-num-macro  = { version = "0.2.0", path = "crates/macro" }
-validator        = { version = "0.2.0", package = "fixed-num-validator", path = "crates/validator" }
+fixed-num-macro = { version = "0.2.0", path = "crates/macro" }
+validator = { version = "0.2.0", package = "fixed-num-validator", path = "crates/validator" }
 
-arrow-buffer     = { version = "55" }
-ethnum           = { version = "1.5.1" }
-paste            = { default-features = false, version = "1", features = [] }
-rand             = { default-features = false, version = "0.9", features = ["std_rng"] }
-serde            = { version = "1" }
+arrow-buffer = { version = "55" }
+ethnum = { version = "1.5.1" }
+paste = { default-features = false, version = "1", features = [] }
+rand = { default-features = false, version = "0.9", features = ["std_rng"] }
+serde = { version = "1" }
 
 # Benchmarks
-rust_decimal     = { version = "1.37.1", features = ["maths"] }
-bigdecimal       = "0.4.8"
-decimal          = { package = "decimal", version = "2.1.0", features = ["serde"] }
-fixed            = { version = "1.29.0", features = ["serde", "std"] }
-decimal-rs       = "0.1.43"
-fastnum          = "0.2.3"
+rust_decimal = { version = "1.37.1", features = ["maths"] }
+bigdecimal = "0.4.8"
+decimal = { package = "decimal", version = "2.1.0", features = ["serde"] }
+fixed = { version = "1.29.0", features = ["serde", "std"] }
+decimal-rs = "0.1.43"
+fastnum = "0.7.4"
 
 # Macros
 quote = { version = "1" }
 
 # Tests and benchmarks
 serde_json = { version = "1", features = ["arbitrary_precision"] }
-criterion  = { version = "0.5", features = ["real_blackbox"] }
-
+criterion = { version = "0.8", features = ["real_blackbox"] }
 
 [workspace.lints.clippy]
-
 assigning_clones = "warn"
 checked_conversions = "warn"
 cloned_instead_of_copied = "warn"

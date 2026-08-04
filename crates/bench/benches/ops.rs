@@ -1,22 +1,23 @@
-use criterion::{black_box, criterion_group, Criterion};
-use std::str::FromStr;
-use std::fmt::Debug;
+use criterion::{Criterion, criterion_group};
 use paste::paste;
-use std::path::{Path, PathBuf};
+use std::fmt::Debug;
+use std::hint::black_box;
 use std::io::Write;
+use std::path::{Path, PathBuf};
+use std::str::FromStr;
 
 use ::bigdecimal::Signed;
 use ::fixed_num::traits::*;
 use ::rust_decimal::MathematicalOps;
 
-use ::fixed_num::Dec19x19 as fixed_num;
-use ::rust_decimal::Decimal as rust_decimal;
 use ::bigdecimal::BigDecimal as bigdecimal;
 use ::decimal::d128 as decimal;
 use ::decimal_rs::Decimal as decimal_rs;
+use ::fastnum::D128 as fastnum;
 use ::fixed::FixedI128;
 use ::fixed::types::extra::U64;
-use ::fastnum::D128 as fastnum;
+use ::fixed_num::Dec19x19 as fixed_num;
+use ::rust_decimal::Decimal as rust_decimal;
 use validator::Series;
 
 #[expect(non_camel_case_types)]
@@ -33,7 +34,9 @@ fn out_dir() -> PathBuf {
 }
 
 fn config() -> Criterion {
-    Criterion::default().noise_threshold(1.0).output_directory(&out_dir())
+    Criterion::default()
+        .noise_threshold(1.0)
+        .output_directory(&out_dir())
 }
 
 // =========================
@@ -74,19 +77,30 @@ fn normalize_by(input: Vec<Option<f64>>, ix: usize) -> Vec<Option<f64>> {
 
 fn after_benchmarks(ops: &[&str], libs: &[&str]) {
     let out_dir = out_dir();
-    let results = &ops.iter().map(|op| {
-        let results = libs.iter().map(|lib| {
-            let path = out_dir.join(format!("{op} {lib}")).join("new").join("estimates.json");
-            path.exists().then(|| {
-                let content = std::fs::read_to_string(&path).unwrap();
-                let json: serde_json::Value = serde_json::from_str(&content).unwrap();
-                // `json["slope"]` is a little bit closer to what Criterion reports in terminal,
-                // but it often doesn't exist in the generated json.
-                json["median"]["point_estimate"].as_f64()
-            }).flatten()
-        }).collect::<Vec<_>>();
-        normalize_by(results, 1)
-    }).collect::<Vec<_>>();
+    let results = &ops
+        .iter()
+        .map(|op| {
+            let results = libs
+                .iter()
+                .map(|lib| {
+                    let path = out_dir
+                        .join(format!("{op} {lib}"))
+                        .join("new")
+                        .join("estimates.json");
+                    path.exists()
+                        .then(|| {
+                            let content = std::fs::read_to_string(&path).unwrap();
+                            let json: serde_json::Value = serde_json::from_str(&content).unwrap();
+                            // `json["slope"]` is a little bit closer to what Criterion reports in terminal,
+                            // but it often doesn't exist in the generated json.
+                            json["median"]["point_estimate"].as_f64()
+                        })
+                        .flatten()
+                })
+                .collect::<Vec<_>>();
+            normalize_by(results, 1)
+        })
+        .collect::<Vec<_>>();
 
     let mut out = Buffer::default();
     out.group_start("<table>");
@@ -112,14 +126,21 @@ fn after_benchmarks(ops: &[&str], libs: &[&str]) {
             let norm = result.map(|x| x / max).unwrap_or(0.01);
             let coeff = ((1.0 + norm.log10()).max(0.0).min(1.0) * 100.0).round();
             let bg = format!("color-mix(in lch, #58760b {coeff}%, #c41c0d)");
-            let fg_opacity = if norm == 1.0 || result.is_none() { 1.0 } else { 0.5 };
+            let fg_opacity = if norm == 1.0 || result.is_none() {
+                1.0
+            } else {
+                0.5
+            };
             let fg = format!("rgba(255, 255, 255, {fg_opacity})");
             let font = if norm == 1.0 { "bold" } else { "normal" };
-            let style = format!("\
+            let style = format!(
+                "\
                 style=\"color: {fg};\
                 background-color: {bg};\
                 font-weight: {font};\"\
-            ").replace("  ", " ");
+            "
+            )
+            .replace("  ", " ");
             match result {
                 Some(value) => out.line(&format!("<td {style}>{value:.2}</td>")),
                 None => out.line(&format!("<td {style}>⚠️</td>")),
@@ -184,20 +205,23 @@ macro_rules! def_bench {
 }
 
 #[allow(non_snake_case)]
-fn bench1<T>(
-    c: &mut Criterion,
-    label: &str,
-    mut series1: Series,
-    f: impl Fn(&T) -> T
-) where T: FromStr<Err: Debug> {
+fn bench1<T>(c: &mut Criterion, label: &str, mut series1: Series, f: impl Fn(&T) -> T)
+where
+    T: FromStr<Err: Debug>,
+{
     series1.seed = 7;
     let a_series = validator::series_str::<fixed_num>(series1);
-    let a_vec: Vec<_> = a_series.iter().map(|s| black_box(T::from_str(s).unwrap())).collect();
-    c.bench_function(label, |bencher| bencher.iter(||
-        for a in a_vec.iter() {
-            black_box(f(a));
-        }
-    ));
+    let a_vec: Vec<_> = a_series
+        .iter()
+        .map(|s| black_box(T::from_str(s).unwrap()))
+        .collect();
+    c.bench_function(label, |bencher| {
+        bencher.iter(|| {
+            for a in a_vec.iter() {
+                black_box(f(a));
+            }
+        })
+    });
 }
 
 #[allow(non_snake_case)]
@@ -206,27 +230,41 @@ fn bench2<T>(
     label: &str,
     mut series1: Series,
     mut series2: Series,
-    f: impl Fn(&T, &T) -> T
-) where T: FromStr<Err: Debug> {
+    f: impl Fn(&T, &T) -> T,
+) where
+    T: FromStr<Err: Debug>,
+{
     series1.seed = 7;
     series2.seed = 17;
     let a_series = validator::series_str::<fixed_num>(series1);
     let b_series = validator::series_str::<fixed_num>(series2);
-    let a_vec: Vec<_> = a_series.iter().map(|s| black_box(T::from_str(s).unwrap())).collect();
-    let b_vec: Vec<_> = b_series.iter().map(|s| black_box(T::from_str(s).unwrap())).collect();
-    c.bench_function(label, |bencher| bencher.iter(||
-        for (a, b) in a_vec.iter().zip(b_vec.iter()) {
-            black_box(f(a, b));
-        }
-    ));
+    let a_vec: Vec<_> = a_series
+        .iter()
+        .map(|s| black_box(T::from_str(s).unwrap()))
+        .collect();
+    let b_vec: Vec<_> = b_series
+        .iter()
+        .map(|s| black_box(T::from_str(s).unwrap()))
+        .collect();
+    c.bench_function(label, |bencher| {
+        bencher.iter(|| {
+            for (a, b) in a_vec.iter().zip(b_vec.iter()) {
+                black_box(f(a, b));
+            }
+        })
+    });
 }
 
 trait RollingWindowBounds: SubWrapper + AddWrapper + DivWrapper + MulWrapper + From<u32> {}
-impl<T> RollingWindowBounds for T
-where T: SubWrapper + AddWrapper + DivWrapper + MulWrapper + From<u32> {}
+impl<T> RollingWindowBounds for T where
+    T: SubWrapper + AddWrapper + DivWrapper + MulWrapper + From<u32>
+{
+}
 
 fn rolling_window_avg<T>(values: &[T], window_size: usize) -> Vec<T>
-where T: RollingWindowBounds {
+where
+    T: RollingWindowBounds,
+{
     let window_size_t = T::from(window_size as u32);
     let one_over_window_size_t = T::from(1).div_wrapper(&window_size_t);
     if values.len() < window_size || window_size == 0 {
@@ -250,12 +288,17 @@ where T: RollingWindowBounds {
 
 #[allow(non_snake_case)]
 fn bench_rolling_window<T>(c: &mut Criterion, label: &str)
-where T: RollingWindowBounds + FromStr<Err: Debug> {
+where
+    T: RollingWindowBounds + FromStr<Err: Debug>,
+{
     let series = validator::series_str::<fixed_num>(Series::new(0..=15, 0..=19));
-    let values = series.iter().map(|s| T::from_str(&s).unwrap()).collect::<Vec<T>>();
-    c.bench_function(label, |bencher| bencher.iter(||
-        black_box( rolling_window_avg(&values, 10) )
-    ));
+    let values = series
+        .iter()
+        .map(|s| T::from_str(&s).unwrap())
+        .collect::<Vec<T>>();
+    c.bench_function(label, |bencher| {
+        bencher.iter(|| black_box(rolling_window_avg(&values, 10)))
+    });
 }
 
 // ==================
